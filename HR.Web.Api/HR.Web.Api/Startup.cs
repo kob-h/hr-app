@@ -10,7 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
+using FluentValidation.AspNetCore;
+using HR.Application.Dtos;
 using HR.Persistence.Database;
+using HR.Web.Api.DtoValidators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -42,7 +46,11 @@ namespace HR.Web.Api
 
             services.AddControllers();
 
-            services.AddMvc();
+            services.AddMvc()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<EmployeeValidator>());
+
+            services.AddTransient<IValidator<Employee>, EmployeeValidator>();
+            services.AddTransient<IValidator<EmployeeAddress>, EmployeeAddressValidator>();
 
             //added to avoid cyclic reference in serialization
             services.AddControllersWithViews()
