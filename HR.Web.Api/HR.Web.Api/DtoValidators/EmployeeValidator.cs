@@ -7,9 +7,9 @@ using HR.Application.Dtos;
 
 namespace HR.Web.Api.DtoValidators
 {
-    public class EmployeeValidator : AbstractValidator<Employee>
+    public class AddEmployeeValidator : AbstractValidator<CreateEmployeeDto>
     {
-        public EmployeeValidator()
+        public AddEmployeeValidator()
         {
             RuleFor(x => x.AnnualSalaryInUsd).GreaterThan(0);
             RuleFor(x => x.BeginningOfEmployment).NotEmpty();

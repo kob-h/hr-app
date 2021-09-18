@@ -12,7 +12,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using HR.Application.BusinessService.Employees;
+using HR.Application.BusinessService.Interfaces;
 using HR.Application.Dtos;
+using HR.Application.Mappers;
 using HR.Persistence.Database;
 using HR.Web.Api.DtoValidators;
 using Microsoft.EntityFrameworkCore;
@@ -47,10 +50,16 @@ namespace HR.Web.Api
             services.AddControllers();
 
             services.AddMvc()
-                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<EmployeeValidator>());
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AddEmployeeValidator>());
+            
+            services.AddTransient<IValidator<CreateEmployeeDto>, AddEmployeeValidator>();
+            services.AddTransient<IValidator<CreateEmployeeAddressDto>, EmployeeAddressValidator>();
 
-            services.AddTransient<IValidator<Employee>, EmployeeValidator>();
-            services.AddTransient<IValidator<EmployeeAddress>, EmployeeAddressValidator>();
+            services.AddTransient<ICreateEmployee, CreateEmployee>();
+            services.AddTransient<IGetEmployeeById, GetEmployeeById>();
+            services.AddTransient<IGetAllEmployees, GetAllEmployees>();
+
+            services.AddAutoMapper(typeof(EmployeeProfile));
 
             //added to avoid cyclic reference in serialization
             services.AddControllersWithViews()
