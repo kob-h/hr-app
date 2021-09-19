@@ -39,12 +39,12 @@ namespace HR.Web.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status400BadRequest)]
         [Route("{id}")]
         public async Task<IActionResult> GetById(
             [FromRoute] Guid id, [FromServices] IGetEmployeeById getEmployeeById)
         {
-            var employee = getEmployeeById.Execute(id);
+            var employee = await getEmployeeById.Execute(id);
             if (employee == null)
             {
                 return NotFound();

@@ -12,7 +12,7 @@ namespace HR.Persistence.Database
     {
         public HRDbContextFactory()
         {
-            
+
         }
 
         public HRDbContext CreateDbContext(string[] args)

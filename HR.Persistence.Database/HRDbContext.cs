@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using HR.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HR.Persistence.Database
 {

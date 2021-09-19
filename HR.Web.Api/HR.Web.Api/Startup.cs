@@ -17,6 +17,8 @@ using HR.Application.BusinessService.Interfaces;
 using HR.Application.Dtos;
 using HR.Application.Mappers;
 using HR.Persistence.Database;
+using HR.Persistence.Repositories;
+using HR.Persistence.Repositories.Interfaces;
 using HR.Web.Api.DtoValidators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -58,6 +60,13 @@ namespace HR.Web.Api
             services.AddTransient<ICreateEmployee, CreateEmployee>();
             services.AddTransient<IGetEmployeeById, GetEmployeeById>();
             services.AddTransient<IGetAllEmployees, GetAllEmployees>();
+
+            services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            
+
+
 
             services.AddAutoMapper(typeof(EmployeeProfile));
 
