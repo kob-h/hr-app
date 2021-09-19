@@ -17,6 +17,7 @@
     <ProjectReference Include="..\..\HR.Application.Dtos\HR.Application.Dtos.csproj" />
     <ProjectReference Include="..\..\HR.Application.Mappers\HR.Application.Mappers.csproj" />
     <ProjectReference Include="..\..\HR.Persistence.Database\HR.Persistence.Database.csproj" />
+    <ProjectReference Include="..\..\HR.Persistence.Repositories\HR.Persistence.Repositories.csproj" />
   </ItemGroup>
 
 

@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using HR.Application.BusinessService.Interfaces;
 using HR.Application.Dtos;
 using HR.Persistence.Database;
+using HR.Persistence.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace HR.Application.BusinessService.Employees
 {
     public class GetEmployeeById : IGetEmployeeById
     {
-        private readonly HRDbContext _context;
+        private readonly IEmployeeRepository _employeeRepository;
         private readonly IMapper _mapper;
 
         public GetEmployeeById(
-            HRDbContext context,
+            IEmployeeRepository employeeRepository,
             IMapper mapper)
         {
-            _context = context;
+            _employeeRepository = employeeRepository;
             _mapper = mapper;
         }
         public async Task<EmployeeDto> Execute(Guid employeeId)
         {
-            var employeeEntity = await _context.Employees.SingleOrDefaultAsync(emp => emp.Id == employeeId);
+            var employeeEntity = await _employeeRepository
+                .FindAllBy(emp => emp.Id == employeeId)
+                .SingleOrDefaultAsync();
             
             return _mapper.Map<EmployeeDto>(employeeEntity);
         }
