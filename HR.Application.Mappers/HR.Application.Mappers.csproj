@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HR.Application.Dtos\HR.Application.Dtos.csproj" />
+    <ProjectReference Include="..\HR.Web.Api\HR.Persistence.Entities\HR.Persistence.Entities.csproj" />
+  </ItemGroup>
+
+</Project>

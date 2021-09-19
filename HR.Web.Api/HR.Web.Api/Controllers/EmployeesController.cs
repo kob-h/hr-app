@@ -4,14 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using HR.Application.BusinessService.Interfaces;
 using HR.Application.Dtos;
 using HR.Persistence.Database;
 using HR.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
-using EmployeeDto = HR.Application.Dtos.Employee;
-using EmployeeAddressDto = HR.Application.Dtos.EmployeeAddress;
-using EmployeeEntity = HR.Persistence.Entities.Employee;
-using EmployeeAddressEntity = HR.Persistence.Entities.EmployeeAddress;
+using EmployeeDto = HR.Application.Dtos.EmployeeDto;
+using EmployeeAddressDto = HR.Application.Dtos.CreateEmployeeAddressDto;
 
 namespace HR.Web.Api.Controllers
 {
@@ -30,19 +30,21 @@ namespace HR.Web.Api.Controllers
         [ProducesResponseType(typeof(List<EmployeeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [Route("")]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> GetAll([FromServices] IGetAllEmployees gerGetAllEmployees)
         {
-            return Ok();
+            var employees = await gerGetAllEmployees.Execute();
+            return Ok(employees);
             
         }
 
         [HttpGet]
         [ProducesResponseType(typeof(EmployeeDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [Route("{employeeId}")]
-        public async Task<IActionResult> GetById([FromRoute] Guid employeeId)
+        [Route("{id}")]
+        public async Task<IActionResult> GetById(
+            [FromRoute] Guid id, [FromServices] IGetEmployeeById getEmployeeById)
         {
-            var employee = await _context.Employees.SingleOrDefaultAsync(emp => emp.Id == employeeId);
+            var employee = getEmployeeById.Execute(id);
             if (employee == null)
             {
                 return NotFound();
@@ -54,33 +56,15 @@ namespace HR.Web.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [Route("")]
-        public async Task<IActionResult> Add([FromBody] EmployeeDto employee)
+        public async Task<IActionResult> Add(
+            [FromBody] CreateEmployeeDto addEmployeeDto,
+            [FromServices] ICreateEmployee addEmployee)
         {
-            var employeeEntity = MapEmployeeDtoToEntity(employee);
-            
-            _context.Employees.Add(employeeEntity);
-            await _context.SaveChangesAsync();
+            var employeeDto = await addEmployee.Execute(addEmployeeDto);
 
-            return CreatedAtAction($"{nameof(GetById)}", new { employeeId = employeeEntity.Id}, employee);
+            return CreatedAtAction($"{nameof(GetById)}", new { employeeId = employeeDto.Id}, employeeDto);
         }
 
-        private EmployeeEntity MapEmployeeDtoToEntity(EmployeeDto employeeDto)
-        {
-            return new EmployeeEntity()
-            {
-                FirstName = employeeDto.FirstName,
-                LastName = employeeDto.LastName,
-                BeginningOfEmployment = employeeDto.BeginningOfEmployment,
-                DateOfBirth = employeeDto.DateOfBirth,
-                AnnualSalaryInUsd = employeeDto.AnnualSalaryInUsd,
-                EmployeeAddress = new EmployeeAddressEntity()
-                {
-                    Country = employeeDto.EmployeeAddress.Country,
-                    City = employeeDto.EmployeeAddress.City,
-                    PostalCode = employeeDto.EmployeeAddress.PostalCode,
-                    Street = employeeDto.EmployeeAddress.Street
-                }
-            };
-        }
+        
     }
 }

@@ -2,9 +2,8 @@
 
 namespace HR.Application.Dtos
 {
-    public class EmployeeAddress
+    public class CreateEmployeeAddressDto
     {
-        public Guid Id { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
         public string Street { get; set; }

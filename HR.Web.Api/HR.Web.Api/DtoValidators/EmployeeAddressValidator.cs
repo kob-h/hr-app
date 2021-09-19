@@ -7,7 +7,7 @@ using HR.Application.Dtos;
 
 namespace HR.Web.Api.DtoValidators
 {
-    public class EmployeeAddressValidator : AbstractValidator<EmployeeAddress>
+    public class EmployeeAddressValidator : AbstractValidator<CreateEmployeeAddressDto>
     {
         public EmployeeAddressValidator()
         {
