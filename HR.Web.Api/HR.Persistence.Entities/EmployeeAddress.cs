@@ -4,9 +4,8 @@ using System.Text;
 
 namespace HR.Persistence.Entities
 {
-    public class EmployeeAddress
+    public class EmployeeAddress: EntityBase
     {
-        public Guid Id { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
         public string Street { get; set; }

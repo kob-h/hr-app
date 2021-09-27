@@ -9,7 +9,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Threading.Tasks;
+using FluentEmail.Smtp;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using HR.Application.BusinessService.Employees;
@@ -20,9 +22,12 @@ using HR.Persistence.Database;
 using HR.Persistence.Repositories;
 using HR.Persistence.Repositories.Interfaces;
 using HR.Web.Api.DtoValidators;
+using Infrastructure.Redis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using StackExchange.Redis;
+using Infrastructure.Email;
 
 namespace HR.Web.Api
 {
@@ -38,11 +43,13 @@ namespace HR.Web.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContextPool<HRDbContext>(
-                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.ConfigureFluentEmail("localhost", 25, false, "fromemail@test.test");
+            
+            //better than using this: explanation:
             //services.AddDbContext<HRDbContext>(options =>
             //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContextPool<HRDbContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddSwaggerGen(c =>
             {
@@ -56,6 +63,7 @@ namespace HR.Web.Api
             
             services.AddTransient<IValidator<CreateEmployeeDto>, AddEmployeeValidator>();
             services.AddTransient<IValidator<CreateEmployeeAddressDto>, EmployeeAddressValidator>();
+            
 
             services.AddTransient<ICreateEmployee, CreateEmployee>();
             services.AddTransient<IGetEmployeeById, GetEmployeeById>();
@@ -65,9 +73,6 @@ namespace HR.Web.Api
 
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             
-
-
-
             services.AddAutoMapper(typeof(EmployeeProfile));
 
             //added to avoid cyclic reference in serialization
@@ -75,6 +80,7 @@ namespace HR.Web.Api
                 .AddNewtonsoftJson(options =>
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
                 );
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
