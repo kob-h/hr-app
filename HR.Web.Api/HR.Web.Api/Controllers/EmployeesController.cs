@@ -2,14 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using FluentEmail.Core;
+using FluentEmail.Core.Models;
+using FluentEmail.Smtp;
 using HR.Application.BusinessService.Interfaces;
 using HR.Application.Dtos;
 using HR.Persistence.Database;
 using HR.Persistence.Entities;
+using Infrastructure.Email;
+using Infrastructure.Redis;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using StackExchange.Redis;
 using EmployeeDto = HR.Application.Dtos.EmployeeDto;
 using EmployeeAddressDto = HR.Application.Dtos.CreateEmployeeAddressDto;
 
@@ -25,7 +33,7 @@ namespace HR.Web.Api.Controllers
         {
             _context = context;
         }
-
+        
         [HttpGet]
         [ProducesResponseType(typeof(List<EmployeeDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]

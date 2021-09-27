@@ -5,13 +5,15 @@ using System.Linq.Expressions;
 using HR.Persistence.Database;
 using HR.Persistence.Entities;
 using HR.Persistence.Repositories.Interfaces;
+using Infrastructure.Abstractions;
+using Infrastructure.Redis;
 using Microsoft.EntityFrameworkCore;
 
 namespace HR.Persistence.Repositories
 {
     public class EmployeeRepository : RepositoryBase<Employee>, IEmployeeRepository
     {
-        public EmployeeRepository(HRDbContext context) : base(context)
+        public EmployeeRepository(HRDbContext context, ICacheService redisOperationManager) : base(context, redisOperationManager)
         {
             
         }
